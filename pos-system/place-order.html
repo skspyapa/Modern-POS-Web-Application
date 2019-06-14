@@ -1,0 +1,227 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Dashboard Template · Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <style>
+
+        i{
+            padding-right: 10px;
+        }
+        li:focus{
+            color: #007bff;
+        }
+        col1{
+            background-color: #491217;
+        }
+    </style>
+    <!-- Custom styles for this template -->
+
+    <link rel="stylesheet" href="css/place-order.css">
+</head>
+<body>
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Modern POS</a>
+
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span data-feather="home"></span>
+                            Dashboard <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manage-customer.html">
+                            <i class="fas fa-user-friends"></i>
+                            <span data-feather="file"></span>
+                            Manage Customer
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manage-item.html">
+                            <i class="fas fa-cookie-bite"></i>
+                            <span data-feather="shopping-cart"></span>
+                            Manage Item
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="place-order.html">
+                            <i class="fas fa-truck"></i>
+                            <span data-feather="users"></span>
+                            Place Order
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="search-order.html">
+                            <i class="fas fa-search"></i>
+                            <span data-feather="bar-chart-2"></span>
+                            Search Order
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" >
+            <div class="row" id="row1">
+                <div class="col">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" >
+                        <h1 class="h2">Place Order</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group mr-2">
+                                <button type="button" class="btn btn-outline-primary" id="NewOrder">New Order</button>
+                                <!--<button type="button" class="btn btn-outline-primary">Remove Order</button>-->
+                                <!--<button type="button" class="btn btn-outline-primary">Update Order</button>-->
+                            </div>
+                            <!--<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">-->
+                            <!--<span data-feather="calendar"></span>-->
+                            <!--This week-->
+                            <!--</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="row2">
+                <div class="col">
+                    <form >
+                        <div class="form-group">
+                            <label for="OrdId">Order ID</label>
+                            <input type="text" class="form-control" id="OrdId"  placeholder="Order Id">
+                            <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="text" class="form-control" id="Date" >
+                            <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col col-12 col-sm-3">
+                                <div class="form-group" id="CustomerId">
+                                    <label for="CusId" id="lbl-cusId">Customer ID</label>
+                                    <div class="form-inline">
+                                        <button type="button" class="btn btn-outline-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="CusIdBtn"  onkeydown="customerId(event)">
+                                            Action
+                                        </button>
+                                        <div class="dropdown-menu" id="CusId">
+
+                                        </div>
+                                    </div>
+                                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                </div>
+                            </div>
+                            <div class="col col-sm-6">
+                                <div class="form-group">
+                                    <label for="CusName">Customer Name</label>
+                                    <input type="text" class="form-control" id="CusName"  placeholder="Customer Name" onkeydown="customerName(event)">
+                                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="form-row">
+                            <div class="col col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label for="ItemCodeBtn" id="lbl-item-code">Item Code</label>
+                                    <div class="form-inline" id="itemCode">
+                                        <button type="button" class="btn btn-outline-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="ItemCodeBtn" onkeydown="itemCode(event)">
+                                            Action
+                                        </button>
+                                        <div class="dropdown-menu">
+
+                                        </div>
+                                    </div>
+                                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                </div>
+                            </div>
+                            <div class="col col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <input type="text" class="form-control" id="Description"  placeholder="Description" onkeydown="description(event)">
+                                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                </div>
+                            </div>
+                            <div class="col col-12 col-sm-2">
+                                <div class="form-group">
+                                    <label for="QtyOnHand">On Hand</label>
+                                    <input type="text" class="form-control" id="QtyOnHand"  placeholder="QtyOnHand" onkeydown="QtyOnHand(event)">
+                                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                </div>
+                            </div>
+                            <div class="col col-12 col-sm-2">
+                                <div class="form-group">
+                                    <label for="quantity">Quantity</label>
+                                    <input type="text" class="form-control" id="Quantity"  placeholder="Quantity" >
+                                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                </div>
+                            </div>
+                            <div class="col col-12 col-sm-2">
+                                <div class="form-group">
+                                    <label for="UnitPrice">Unit Price</label>
+                                    <input type="text" class="form-control" id="UnitPrice"  placeholder="Unitprice" onkeydown="unitPrice(event)">
+                                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group" id="btn-submit">
+                            <button type="button" class="btn btn-outline-primary" id="BtnSave" >Add</button>
+
+                        </div>
+                        <hr>
+                    </form>
+                </div>
+            </div>
+            <div class="row" id="row3">
+                <div class="col">
+                    <table class="table" id="OrderData">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Item Code</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Delete</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" id="place-order">
+                <div class="col col-12 col-sm-2">
+                    <span>Total :</span>
+                    <span id="Total"></span>
+                </div>
+                <div class="col col-12 col-sm-10" id="place-order-btn">
+                    <button class="btn btn-outline-primary" id="PlaceOrder">Place Order</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="modal-footer"></footer>
+</div>
+</body>
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/database.js"></script>
+<script src="js/place-order.js"></script>
+</html>

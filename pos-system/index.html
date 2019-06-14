@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard Template</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <style>
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">IJSE</a>
+
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span data-feather="home"></span>
+                            Dashboard <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manage-customer.html" id="ManageCustomer">
+                            <i class="fas fa-user-friends"></i>
+                            <span data-feather="file"></span>
+                            Manage Customer
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manage-item.html">
+                            <i class="fas fa-cookie-bite"></i>
+                            <span data-feather="shopping-cart"></span>
+                            Manage Item
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="place-order.html">
+                            <i class="fas fa-truck"></i>
+                            <span data-feather="users"></span>
+                            Place Order
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="search-order.html">
+                            <i class="fas fa-search"></i>
+                            <span data-feather="bar-chart-2"></span>
+                            Search Order
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main">
+            <div class="row" id="row1">
+                <div class="col">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" >
+                        <h1 class="h2">Dashboard</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="row2">
+                <div class="col col-sm-3" >
+                    <div class="row" ><div class="col" id="img-col-1">
+                        <a class="nav-link" href="manage-customer.html">
+                        <img src="img/customer.png" alt="" class="form-group" id="img1">
+                        </a></div></div>
+                    <div class="row"><div class="col" id="col-lbl1"><label class="form-group">Manage Customer</label></div></div>
+
+
+                </div>
+                <div class="col col-sm-3" >
+                    <div class="row" ><div class="col" id="img-col-2">
+                        <a class="nav-link" href="manage-item.html">
+                        <img src="img/items.png" alt="" class="form-group" id="img2">
+                        </a></div></div>
+                    <div class="row"><div class="col" id="col-lbl2"><label class="form-group">Manage Item</label></div></div>
+
+
+                </div>
+                <div class="col col-sm-3" >
+                    <div class="row" ><div class="col" id="img-col-3">
+                        <a class="nav-link" href="place-order.html">
+                        <img src="img/order.png" alt="" class="form-group" id="img3">
+                        </a></div></div>
+                    <div class="row"><div class="col" id="col-lbl3"><label class="form-group">Place Order</label></div></div>
+
+
+                </div>
+                <div class="col col-sm-3" >
+                    <div class="row" ><div class="col" id="img-col-4">
+                        <a class="nav-link" href="search-order.html">
+                        <img src="img/search.png" alt="" class="form-group" id="img4">
+                        </a></div></div>
+                    <div class="row"><div class="col" id="col-lbl4"><label class="form-group">Search Order</label></div></div>
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="modal-footer"></footer>
+</div>
+</body>
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/database.js"></script>
+</html>
