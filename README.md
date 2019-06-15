@@ -2,7 +2,7 @@
 
 ## Description
 This Application is built for making easy the business by Managing customer,managing item,Managing order,Searching order.
-User Attractive interface and easy to understand how to control.you can make reports anytime from data you have.Layered Architecture used for buiding the project.
+User Attractive interface and easy to understand how to control.
 
 ## Purpose
 giving a fully functional point of sale system according to client requirement
