@@ -3,29 +3,36 @@ $(document).ready(function () {
     $("#name").focus();
     idGenerator();
     loadCustomers();
-    validateFunction()
+    validateFunction();
+
     $(document).on("click", ".delete-cust", function () {
         var custId = $($(this).parent().children()[0]).text();
-        console.log(custId);
-        var selectedRow=$(this);
-        var ajaxConfig={
-            method:'DELETE',
-            url:'http://localhost:8080/customers/'+custId,
-            async:true,
+        var selectedRow = $(this);
+        var response = confirm("Are you Want To Delete");
+        if (response) {
+        var ajaxConfig = {
+            method: 'DELETE',
+            url: 'http://localhost:8080/customers/' + custId,
+            async: true,
         };
         $.ajax(ajaxConfig).done(function (response) {
             console.log(response);
-            if(response){
+            if (response) {
                 selectedRow.parent().remove();
                 newCustomer();
+                alert("Successfully Deleted The Customer");
             }
             else {
                 alert("Error");
             }
-        }).fail(function (jqxhr,textStatus,errorThrown) {
-            console.log("Please call DEP")
+        }).fail(function (jqxhr, textStatus, errorThrown) {
+            console.log("Please call DEP");
+            newCustomer();
+            alert(jqxhr.responseText);
         });
-
+    }else{
+            alert("OK");
+        }
     });
 });
 function validateFunction() {
@@ -99,6 +106,7 @@ function idGenerator() {
             $("#id").val("C" + ++idsubs);
         }
     }).fail(function (jqxhr,textStatus,errorThrown) {
+        alert(jqxhr.responseText);
         console.log("Please call DEP")
     });
 
@@ -147,6 +155,7 @@ function saveCustomer() {
 
     }).fail(function (jqxhr,textStatus,errorThrown) {
         console.log("Please call DEP");
+        alert(jqxhr.responseText);
     });
 
 }
@@ -199,9 +208,13 @@ function loadCustomers() {
 
             });
         });
-
+        $('#tbl-customer').DataTable({
+            searching: false,
+            pageLength:10
+        });
     }).fail(function (jqxhr,textStatus,errorThrown) {
         console.log("Please call DEP");
+        alert(jqxhr.responseText);
     });
 }
 
@@ -226,7 +239,8 @@ function rowUpdate(row) {
             alert("Successfully Not Updated The Customer");
         }
     }).fail(function (jqxhr,textStatus,errorThrown) {
-        console.log("Please call DEP")
+        console.log("Please call DEP");
+        alert(jqxhr.responseText);
     });
 
 }

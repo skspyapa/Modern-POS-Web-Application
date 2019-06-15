@@ -1,5 +1,6 @@
 package lk.ijse.dep.servlet;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
@@ -58,7 +59,9 @@ public class CustomerServlet extends HttpServlet {
                     writer.println(customersArray.toString());
 
                 }else{
-                    resp.sendError(404);
+                    resp.setStatus(404);
+
+                    writer.println("Can't get Customers");
                 }
 
             }catch (SQLException e) {
@@ -105,7 +108,9 @@ public class CustomerServlet extends HttpServlet {
 
                 }else {
 
-                    resp.sendError(400);
+                    resp.setStatus(400);
+
+                    writer.println("Please check the Customer Id");
                 }
 
             } catch (SQLException e) {
@@ -213,9 +218,19 @@ Connection connection=null;
 
             }
 
-        }catch (SQLException e) {
+        }catch (MySQLIntegrityConstraintViolationException e) {
 
-            resp.sendError(500);
+            resp.setStatus(500);
+
+            writer.println("Customer Id already exists in Order");
+
+            e.printStackTrace();
+
+        }catch (SQLException e){
+
+            resp.setStatus(500);
+
+            writer.println("Internal Error");
 
             e.printStackTrace();
 

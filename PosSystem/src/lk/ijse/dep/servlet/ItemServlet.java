@@ -1,5 +1,6 @@
 package lk.ijse.dep.servlet;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
@@ -57,10 +58,12 @@ Connection connection=null;
 
                 }else {
 
-                    resp.sendError(404);
+                    resp.setStatus(404);
+
+                    writer.println("Can't get Items");
                 }
 
-            } catch (SQLException e) {
+            }catch (SQLException e) {
 
                 resp.sendError(500);
 
@@ -104,7 +107,9 @@ Connection connection=null;
 
                 }else {
 
-                    resp.sendError(400);
+                    resp.setStatus(400);
+
+                    writer.println("Please check the Item Code");
                 }
 
             } catch (SQLException e) {
@@ -212,7 +217,15 @@ writer.println("false");
 
             }
 
-        } catch (SQLException e) {
+        }catch (MySQLIntegrityConstraintViolationException e){
+
+            resp.setStatus(500);
+
+            writer.println("Items Already in orders");
+
+            e.printStackTrace();
+
+        }catch (SQLException e) {
 
             resp.sendError(500);
 
@@ -232,7 +245,7 @@ writer.println("false");
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String pathInfo = req.getPathInfo();
-
+        PrintWriter writer = resp.getWriter();
         resp.setContentType("application/json");
 Connection connection=null;
         try{
@@ -257,12 +270,11 @@ Connection connection=null;
             boolean result = stmt.executeUpdate() > 0;
 
             if (result){
-
-                resp.sendError(200);
-
+                writer.println("true");
+                //resp.setStatus(200);
             }else {
-
-                resp.sendError(400);
+                writer.println("flase");
+                //resp.setStatus(400);
 
             }
 

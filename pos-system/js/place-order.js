@@ -40,6 +40,9 @@ var firstCustomer;
 var firstItem;
 var itemArray =[];
 var itemObject={};
+var Grandtotal;
+
+
 function loadId(){
     var ajaxConfig={
         method:'GET',
@@ -62,7 +65,10 @@ function loadId(){
         }
 
     }).fail(function (jqxhr,textStatus,errorThrown) {
-        console.log("Please call DEP")
+        console.log("Please call DEP");
+        alert(jqxhr.responseText);
+
+
     });
 
 }
@@ -75,14 +81,12 @@ function loadArray() {
     };
 
     $.ajax(ajaxConfig).done(function (items,textStatus,jqxhr) {
-        items.forEach(function (item) {
-            var itemObject={id:item.code,description:item.description,qtyOnHand:item.qtyOnHand,unitPrice:item.unitPrice};
-            itemArray.push(itemObject);
-        });
-        //console.log("ArrayLength:"+itemArray.length)
+
+        itemArray=items;
 
     }).fail(function (jqxhr,textStatus,errorThrown) {
         console.log("Please call DEP");
+        alert(jqxhr.responseText);
     });
 
 }
@@ -122,7 +126,9 @@ function loadCustomers() {
 
     }).fail(function (jqxhr,textStatus,errorThrown) {
         console.log("Please call DEP");
+        alert(jqxhr.responseText);
     });
+
 }
 
 function loadItems() {
@@ -147,23 +153,19 @@ function loadItems() {
         $("#itemCode .dropdown-menu .dropdown-item").click(function () {
             $("#itemCode button").text($(this).text());
 
-            var ajaxConfig={
-                method:'GET',
-                url:'http://localhost:8080/item/'+$(this).text(),
-                async:true
-            };
 
-            $.ajax(ajaxConfig).done(function (item,textStatus,jqxhr) {
+            itemArray.forEach(function (item) {
+                //console.log($("#itemCode button").text());
+                if (item.code === $("#itemCode button").text()) {
                 $("#Description").val(item.description);
                 $("#QtyOnHand").val(item.qtyOnHand);
                 $("#UnitPrice").val(item.unitPrice);
-
-            }).fail(function (jqxhr,textStatus,errorThrown) {
-                console.log("Please call DEP");
-            });
+            }
+                });
         });
     }).fail(function (jqxhr,textStatus,errorThrown) {
         console.log("Please call DEP");
+        alert(jqxhr.responseText);
     });
 
 
@@ -171,16 +173,6 @@ function loadItems() {
 
 var isplaceorder=false;
 function validateQuantity(){
-    // if(parseInt($("#QtyOnHand").val())>=parseInt($("#Quantity").val())){
-    //     $("#BtnSave").focus();
-    //
-    // }else if(l){
-    //     alert("Please Enter A Valid Quantity...! ");
-    //     $("#Quantity").focus(function () {
-    //         $("#Quantity").select();
-    //     });
-    //
-    // }
     $("#Quantity").on("keyup",function () {
         var quantity=$(this).val().trim();
         var checker=/^[0-9]*$/;
@@ -198,38 +190,32 @@ function validateQuantity(){
 }
 
 $("#BtnSave").click(function (event) {
-    if (($("#CusName").val().length != 0) && ($("#Description").val() != 0) &&($("#Quantity").val().trim().length>0)) {
+    if(parseInt($("#QtyOnHand").val())<parseInt($("#Quantity").val())){
+            //refresh();
+
+        $("#Quantity").val("");
+        $("#Quantity").css('border-color', '#ced4da');
+        alert("Please Enter The Correct Value");
+
+    }else{
+        var length=$("tbody tr").length;
+        if (($("#CusName").val().length != 0) && ($("#Description").val() != 0) && ($("#Quantity").val().trim().length > 0)) {
+
         var isAlreadyAvailable = false;
 
+
+        $(this).css('border-color', '#ced4da');
         $("tbody tr").each(function (index, obj) {
 
 
             if (obj.firstElementChild.textContent === $("#ItemCodeBtn").text()) {
-                var value = parseInt(obj.children[2].textContent) + parseInt($("#Quantity").val());
-                var unitPrice = parseInt(obj.children[3].textContent);
-                var total = value * unitPrice;
-
-                obj.children[2].textContent = value;
-                obj.children[4].textContent = total;
                 isAlreadyAvailable = true;
-
-
-
-                var rowItemQuantity=$("#Quantity").val();
-                var rowItemCode=obj.children[0].textContent;
                 rowUpdate($(this));
-
-                itemArray.forEach(function (item) {
-                   if(item.id===rowItemCode){
-                       item.qtyOnHand=parseInt(item.quantity)-parseInt(rowItemQuantity);
-                       $("#QtyOnHand").val(item.quantity);
-                       $("#Quantity").val("");
-
-                   }
-                });
-
             }
         });
+
+
+
         if (!isAlreadyAvailable) {
             var html2 = '<tr>' +
                 '<td>' + $("#ItemCodeBtn").text() + '</td>' +
@@ -243,49 +229,59 @@ $("#BtnSave").click(function (event) {
             $("#OrderData").append(html2);
 
             itemArray.forEach(function (item) {
-                if(item.id===$("#ItemCodeBtn").text()){
-                    item.quantity=parseInt(items.quantity)-parseInt($("#Quantity").val());
-                    $("#QtyOnHand").val(items.quantity);
-                    console.log(items.quantity);
+                //console.log(item.code);
+                if (item.code === $("#ItemCodeBtn").text()) {
+                    item.qtyOnHand = parseInt(item.qtyOnHand) - parseInt($("#Quantity").val());
+                    console.log(parseInt(item.qtyOnHand));
+                    console.log(parseInt($("#Quantity").val()));
+                    $("#QtyOnHand").val(item.qtyOnHand);
+                    console.log(item.qtyOnHand);
                     $("#Quantity").val("");
+
                 }
             });
 
 
         }
-
+            if(length==0){
+                $('#OrderData').DataTable(
+                    {
+                        searching: false,
+                        pageLength:10
+                    }
+                );
+            }
         refresh();
         $("tbody tr").click(function (e) {
-        console.log("hii");
-            if (clickCount < 1) {
 
+            if (clickCount < 1) {
+                $("#itemCode button").off("click");
                 itemArray.forEach(function (item) {
-                    if (item.id === ($($(this).children()[0]).text())) {
-                        item.quantity = parseInt(item.quantity) + parseInt($($(this).children()[2]).text());
-                        $("#QtyOnHand").val(item.quantity);
+                    if (item.code === ($($(this).children()[0]).text())) {
+                        item.qtyOnHand = parseInt(item.qtyOnHand) + parseInt($($(this).children()[2]).text());
+                        console.log(item.qtyOnHand);
+                        $("#QtyOnHand").val(item.qtyOnHand);
+                        $($(this).children()[2]).text("");
                     }
                 });
 
 
-
-            $("#ItemCodeBtn").text($($(this).children()[0]).text());
-            $("#Description").val($($(this).children()[1]).text());
-            $("#Quantity").val($($(this).children()[2]).text());
-            $("#UnitPrice").val($($(this).children()[3]).text());
-        }
+                $("#ItemCodeBtn").text($($(this).children()[0]).text());
+                $("#Description").val($($(this).children()[1]).text());
+                $("#Quantity").val($($(this).children()[2]).text());
+                $("#UnitPrice").val($($(this).children()[3]).text());
+            }
             clickCount++;
+            //$(this).remove();
         });
-    }
-    else {
+            $("#itemCode button").on("click");
+            calculateTotal();
+    }else {
         alert("Please Select Customer And Item Data Correctly...!");
         refresh();
     }
-    Grandtotal=0;
-    $(document).find("tbody tr").each(function (index,obj) {
-        Grandtotal+=parseInt($($(this).children()[4]).text());
-    });
-    console.log(Grandtotal);
-    $("#Total").text(Grandtotal);
+clickCount=0;
+}
 });
 
 function refresh() {
@@ -301,50 +297,51 @@ function refresh() {
     $("#Quantity").val("");
     $("#UnitPrice").val("");
 }
+
+
 //delete row & update stock
 $(document).off("click",".delete");
 $(document).on("click",".delete", function () {
-    var rowItemQuantity=$($(this).parent().children()[2]).text();
-    var rowItemCode=$($(this).parent().children()[0]).text();
-    console.log(rowItemQuantity+" " +rowItemCode);
+
+    var result = confirm("Are You Sure To Delete   ");
+    if (result){
+        var rowItemQuantity = $($(this).parent().children()[2]).text();
+    var rowItemCode = $($(this).parent().children()[0]).text();
+    console.log(rowItemQuantity + " " + rowItemCode);
 
 
     itemArray.forEach(function (item) {
-        if (item.id===rowItemCode){
-            console.log(item.id+" " +rowItemCode);
-            item.quantity=parseInt(item.quantity)+parseInt(rowItemQuantity);
-            $("#QtyOnHand").val(item.quantity);
+        if (item.code === rowItemCode) {
+            console.log(item.code + " " + rowItemCode);
+            item.qtyOnHand = parseInt(item.qtyOnHand) + parseInt(rowItemQuantity);
+            $("#QtyOnHand").val(item.qtyOnHand);
         }
     });
-
-
-
-
-
-
-
-
     $(this).parent().remove();
+    calculateTotal();
+    refresh();
+}
+});
+function calculateTotal() {
     Grandtotal=0;
     $(document).find("tbody tr").each(function (index,obj) {
+        console.log(parseInt(index +"   "+$($(this).children()[4]).text()));
         Grandtotal+=parseInt($($(this).children()[4]).text());
     });
     console.log(Grandtotal);
     $("#Total").text(Grandtotal);
-    refresh();
-});
+}
+
+
 function rowUpdate(row) {
     row.find("td:nth-child(2)").text($("#Description").val());
-    row.find("td:nth-child(3)").text($("#Quantity").val());
+    row.find("td:nth-child(3)").text(parseInt(row.find("td:nth-child(3)").text())+parseInt($("#Quantity").val()));
     row.find("td:nth-child(4)").text($("#UnitPrice").val());
-
+    row.find("td:nth-child(5)").text(parseInt(row.find("td:nth-child(5)").text())+(parseInt($("#Quantity").val()) * parseFloat($("#UnitPrice").val())));
 
     itemArray.forEach(function (item) {
-        if($("#ItemCodeBtn").val()==item.id){
-            item.description=$("#Description").val();
-            item.quantity=$("#Quantity").val();
-            item.unitprice=$("#UnitPrice").val();
-            console.log(item.quantity);
+        if($("#ItemCodeBtn").text()==item.code){
+            item.qtyOnHand=item.qtyOnHand - $("#Quantity").val();
         }
     });
 
@@ -372,34 +369,32 @@ $("#PlaceOrder").click(function () {
     $.ajax(ajaxConfig).done(function (data) {
         console.log(data);
         if (data) {
-
+            loadId();
             refresh();
+            alert("Successfully Saved");
         }else {
-            alert("Error")
+            alert("Not Successfully Saved");
         }
 
     }).fail(function (jqxhr,textStatus,errorThrown) {
-        console.log("Please call DEP")
+        console.log("Please call DEP");
+        alert(jqxhr.responseText);
+
     });
-
-
-
-
-
     isplaceorder=true;
     refresh();
     isplaceorder=false;
-
-
 
     $(document).find("tbody tr").each(function () {
         $(this).parent().remove();
     });
 
 });
+
 $("#NewOrder").click(function () {
     if(clickCount<1) {
         loadId();
+        refresh();
     }
     clickCount++;
     });

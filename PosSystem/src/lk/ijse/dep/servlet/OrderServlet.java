@@ -20,15 +20,14 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-
+        PrintWriter writer = resp.getWriter();
         String pathInfo = req.getPathInfo();
-
+Connection connection=null;
         if(pathInfo.substring(1)!=null){
         try {
 
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/thogakade", "root", "123456");
-
+            BasicDataSource bds = (BasicDataSource) getServletContext().getAttribute("dbpool");
+            connection = bds.getConnection();
             connection.setAutoCommit(false);
 
             PreparedStatement stmt2 = connection.prepareStatement("select itemCode,qty from itemdetail where orderId=?");
@@ -47,7 +46,8 @@ public class OrderServlet extends HttpServlet {
                     boolean result1 = stmt4.executeUpdate() > 0;
 
                     if(!result1){
-                        resp.sendError(500);
+                        resp.setStatus(500);
+                        writer.println("Something Wrong In Deleting Order");
                     }
 
             }
@@ -68,32 +68,39 @@ public class OrderServlet extends HttpServlet {
 
                         connection.commit();
 
-                        resp.sendError(200);
+                        resp.setStatus(200);
+
+                        writer.println("Successfully Updated");
 
                     }else{
                         connection.rollback();
 
-                        resp.sendError(400);
+                        resp.setStatus(400);
+
+                        writer.println("Something Wrong");
                     }
 
                 }else {
 
                     connection.rollback();
 
-                    resp.sendError(500);
+                    resp.setStatus(500);
+
+                    writer.println("Something Wrong");
 
                 }
 
-        } catch (ClassNotFoundException e) {
-
-            resp.sendError(500);
-
-            e.printStackTrace();
         } catch (SQLException e) {
 
             resp.sendError(500);
 
             e.printStackTrace();
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
     }else {
@@ -249,28 +256,25 @@ Connection connection=null;
                             stmt3.setObject(2,itemCode);
                             boolean result3 = stmt3.executeUpdate() > 0;
 
-                            if(result3){
-                                writer.println("true");
-                                //resp.sendError(200);
-
-                            }else {
-                                writer.println("false");
+                            if(!result3){
                                 connection.rollback();
-                                //resp.sendError(400);
-
+                                writer.println("false");
                             }
                         }else {
-                            writer.println("false");
                             connection.rollback();
+
+                            writer.println("false");
                             //resp.sendError(400);
 
                         }
 
                     }
+                    writer.println("true");
                     connection.commit();
                 }else {
-                    writer.println("false");
                     connection.rollback();
+
+                    writer.println("false");
                     //resp.sendError(400);
 
                 }
